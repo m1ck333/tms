@@ -1,0 +1,15 @@
+{
+  "name": "@tms/ui",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./primitives": "./src/primitives/index.ts",
+    "./desktop": "./src/desktop/index.ts",
+    "./mobile": "./src/mobile/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  }
+}
