@@ -7,9 +7,27 @@
     ".": "./src/index.ts",
     "./primitives": "./src/primitives/index.ts",
     "./desktop": "./src/desktop/index.ts",
-    "./mobile": "./src/mobile/index.ts"
+    "./mobile": "./src/mobile/index.ts",
+    "./lib": "./src/lib/index.ts",
+    "./styles/base.css": "./src/styles/base.css"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.2.4",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.4.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.5",
+    "@types/react-dom": "^19.2.3",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   }
 }

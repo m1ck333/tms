@@ -1,0 +1,18 @@
+/*
+ * @tms/theme-us — US brand skin. Overrides ONLY the brand tokens; neutrals and
+ * the token->utility mapping come from @tms/ui/styles/base.css. Scoped by
+ * [data-brand='us'] so the showcase can switch brands at runtime; a product app
+ * sets data-brand="us" on <html> once. US brand = emerald.
+ */
+
+[data-brand='us'] {
+  --primary: oklch(0.6 0.14 158);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.6 0.14 158);
+}
+
+[data-brand='us'].dark {
+  --primary: oklch(0.72 0.15 158);
+  --primary-foreground: oklch(0.15 0.02 158);
+  --ring: oklch(0.72 0.15 158);
+}

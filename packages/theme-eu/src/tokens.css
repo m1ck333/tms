@@ -1,0 +1,18 @@
+/*
+ * @tms/theme-eu — EU brand skin. Overrides ONLY the brand tokens; neutrals and
+ * the token->utility mapping come from @tms/ui/styles/base.css. Scoped by
+ * [data-brand='eu'] so the showcase can switch brands at runtime; a product app
+ * sets data-brand="eu" on <html> once. EU brand = blue.
+ */
+
+[data-brand='eu'] {
+  --primary: oklch(0.55 0.21 256);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.55 0.21 256);
+}
+
+[data-brand='eu'].dark {
+  --primary: oklch(0.7 0.16 256);
+  --primary-foreground: oklch(0.15 0.02 256);
+  --ring: oklch(0.7 0.16 256);
+}

@@ -23,6 +23,18 @@ change the rule in a commit — don't quietly break it.
 - **[review]** Components never hardcode a brand color or logo. Colors come from
   theme tokens (`@tms/theme-eu` / `@tms/theme-us`); the logo comes through a slot.
 - Dark mode via the same token system.
+- **[review]** **One color palette.** Only the semantic tokens exist (`primary`,
+  `muted`, `accent`, `border`, …); no ad-hoc hex/oklch in components. Neutrals are
+  a single shared palette in `base.css`; a brand overrides **only** `--primary`
+  and `--ring` — nothing else is tinted per brand.
+- **[review]** **Consistent control radius.** Every form control — button, input,
+  select, multiselect, textarea — uses `rounded-md` (→ `--radius-md`). Reskin all
+  by changing `--radius`. Don't set per-control radii.
+- **[review]** **z-index only from the named scale** (`z-dropdown`, `z-sticky`,
+  `z-overlay`, `z-modal`, `z-popover`, `z-tooltip`, `z-toast`). Never `z-[999]`.
+- **[review]** **Breakpoints defined once** in `base.css` (`--breakpoint-*`).
+  Both CSS (`sm:`/`md:`/…) and the `useBreakpoint` hook (`@tms/core`, reads the
+  same vars) use them — never a hardcoded pixel width in JS.
 
 ## 3. Component layering (`@tms/ui`)
 
@@ -46,9 +58,13 @@ change the rule in a commit — don't quietly break it.
 
 - **[review]** Promote something into a shared package **only after both regions
   use it the same way.** Premature sharing is drift.
-- **[review]** Shared hooks/utils live in `@tms/core` under `hooks/` and `utils/`
-  — region-agnostic only (`useDebounce`, `useTableSort`, `cn`, `downloadFile`).
-  Region-specific ones stay in the app.
+- **[review]** Shared **app-level** hooks/utils live in `@tms/core` under `hooks/`
+  and `utils/` — region-agnostic plumbing used by apps (`useDebounce`,
+  `useTableSort`, `downloadFile`). Region-specific ones stay in the app.
+- **[review]** **Styling/UI helpers stay in `@tms/ui`** (`src/lib/`, e.g. `cn`) —
+  they belong to the component library, not `@tms/core`. Dependency direction:
+  `@tms/ui` must **not** import `@tms/core`; `ui` and `core` are siblings, both
+  consumed by apps (`theme ← ui`, plus `core`, all used by apps).
 - **[review]** Formatters/validators use **shared logic + per-region config**: a
   generic helper in `@tms/core` (locale/currency/rules as params), and a thin
   per-app wrapper that supplies EU vs US config. The _how_ is shared and reviewed
@@ -97,3 +113,33 @@ schemas.ts` (same shape as the demo).
   deliberately left out. "Why is this here?" → deleting is a valid answer.
 - **[lint]** `pnpm lint`, `pnpm format:check`, and `pnpm typecheck` must pass
   before a change is considered done. Pre-commit runs lint-staged (husky).
+
+### Git & running the app (hard rules)
+
+- **Never `git commit`, `push`, or deploy without the user's explicit
+  confirmation each time.** Prior approval does not carry to the next action.
+- **Never run or restart a dev server.** Building (`vite build`), lint, typecheck
+  and tests are fine; starting/restarting a server is the user's job — ask them.
+- **Don't commit per small change.** Group related work into one meaningful commit
+  once a reviewable unit is complete and approved.
+- **Commit message style:** `<type>: <short imperative summary>` (~50 chars,
+  lowercase). Types: `feat` `fix` `chore` `docs` `refactor` `test` `style`. Add a
+  short body only when the "why" isn't obvious. **No attribution / co-author
+  trailers.** Example: `feat: add Button primitive with brand tokens`.
+
+## 11. Where rules live
+
+Single source of truth, no duplication.
+
+| Scope                 | Location                                | Example                                  |
+| --------------------- | --------------------------------------- | ---------------------------------------- |
+| Monorepo-wide         | `docs/RULES.md` (this file)             | localization, no SCSS, commit style      |
+| Claude behavior       | root `CLAUDE.md`                        | never commit without asking, small diffs |
+| Package-specific      | that package's `README.md`              | `@tms/ui` layer/import rules             |
+| App / region-specific | `apps/<app>/CLAUDE.md` (or `README.md`) | EU PIB/JMBG + `sr`; US EIN/SSN + `en`    |
+
+- Nested `CLAUDE.md` files are auto-loaded by Claude Code when working in that
+  subtree, on top of the root one.
+- **[review]** A rule is written **once**. Local files hold only what is genuinely
+  local and link back here for shared rules — never restate a shared rule (that
+  drifts).

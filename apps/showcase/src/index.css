@@ -1,0 +1,7 @@
+@import 'tailwindcss';
+@import '@tms/ui/styles/base.css';
+@import '@tms/theme-eu/tokens.css';
+@import '@tms/theme-us/tokens.css';
+
+/* Scan the ui package (outside this app dir) for class names. */
+@source '../../../packages/ui/src';

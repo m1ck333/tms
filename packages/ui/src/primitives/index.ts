@@ -3,4 +3,4 @@
 // Badge, Dialog, Sheet). Never hardcode a brand color or logo — consume theme
 // tokens. When unsure whether something belongs here, it does NOT: a wrongly
 // shared component is worse than a duplicated one.
-export {}
+export * from './button'

@@ -47,6 +47,7 @@ export default defineConfig([
         { type: 'primitives', pattern: 'packages/ui/src/primitives/**/*' },
         { type: 'desktop', pattern: 'packages/ui/src/desktop/**/*' },
         { type: 'mobile', pattern: 'packages/ui/src/mobile/**/*' },
+        { type: 'shared', pattern: 'packages/ui/src/lib/**/*' },
       ],
     },
     rules: {
@@ -55,9 +56,11 @@ export default defineConfig([
         {
           default: 'disallow',
           rules: [
-            { from: 'primitives', allow: ['primitives'] },
-            { from: 'desktop', allow: ['primitives', 'desktop'] },
-            { from: 'mobile', allow: ['primitives', 'mobile'] },
+            // `shared` = cross-cutting helpers (e.g. cn); any layer may use it.
+            { from: 'primitives', allow: ['primitives', 'shared'] },
+            { from: 'desktop', allow: ['primitives', 'desktop', 'shared'] },
+            { from: 'mobile', allow: ['primitives', 'mobile', 'shared'] },
+            { from: 'shared', allow: ['shared'] },
           ],
         },
       ],
