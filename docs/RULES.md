@@ -12,9 +12,14 @@ change the rule in a commit — don't quietly break it.
 
 - **[review]** Every user-visible string goes through `t()`. No hardcoded UI text.
   - Only exception: strings identical in every language (e.g. "Status", brand names).
-- EU apps: `sr` is default, `en` is fallback. US apps: `en` is default.
+- **English is the default UI language** in every app (EU and US). Serbian (and
+  other languages) are switchable, but never set as the preferred default.
 - Locale content is **per app** (not shared) — it differs by region.
 - Keys are namespaced by feature (`common`, `navigation`, `<feature>`).
+- **[review]** `@tms/ui` is i18n-agnostic — it **never** calls `t()`. Generic
+  component strings ("No results", "Loading", "Clear", …) come from
+  `UiStringsProvider` (English defaults); each app maps `t()` → the provider once.
+  Per-instance text (label/placeholder/error) stays a prop.
 
 ## 2. Styling & brand
 
@@ -35,6 +40,14 @@ change the rule in a commit — don't quietly break it.
 - **[review]** **Breakpoints defined once** in `base.css` (`--breakpoint-*`).
   Both CSS (`sm:`/`md:`/…) and the `useBreakpoint` hook (`@tms/core`, reads the
   same vars) use them — never a hardcoded pixel width in JS.
+- **[review]** **One shared font** — Inter (self-hosted, `--font-sans` in
+  `base.css`), used by every app. A brand may override `--font-sans` if it ever
+  needs its own; the default is shared.
+- **[review]** **`accent` ≠ `secondary`** — they are kept visibly distinct
+  (accent is the hover/highlight token, secondary is for secondary controls).
+- **[review]** **Cursor affordances** — interactive components set
+  `cursor-pointer` and `disabled:cursor-not-allowed` (Tailwind v4 dropped the
+  default button cursor). Never leave a clickable element on the default cursor.
 
 ## 3. Component layering (`@tms/ui`)
 
@@ -84,6 +97,13 @@ change the rule in a commit — don't quietly break it.
   Schemas are shared by the form and its tests.
 - **[review]** Numbers use `NumberInput`, never `<input type="number">`. Numeric
   fields default to `undefined` (empty with a placeholder), not `0`.
+- **[review]** Every labeled control auto-associates its label: fall back to
+  `useId()` for the control id (`id || name || useId()`) so the label is always
+  clickable and `aria-describedby` (helper/error) is always wired — never rely on
+  the caller passing an `id`.
+- **[review]** Form action buttons (Save/Cancel) go in a **sticky footer** —
+  `DialogFooter` / `SheetFooter` — always visible without scrolling. The header
+  holds only the title/description + close X; never put Save in the header.
 
 ## 7. TypeScript & imports
 
