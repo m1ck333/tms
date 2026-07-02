@@ -14,6 +14,14 @@ export type UiStrings = {
   remove: string
   selectPlaceholder: string
   searchPlaceholder: string
+  firstPage: string
+  previousPage: string
+  nextPage: string
+  lastPage: string
+  rowsPerPage: string
+  // Interpolated → function entries so apps can localize with proper grammar.
+  showing: (from: number, to: number, total: number) => string
+  pageInfo: (page: number, total: number) => string
 }
 
 export const defaultUiStrings: UiStrings = {
@@ -26,6 +34,13 @@ export const defaultUiStrings: UiStrings = {
   remove: 'Remove',
   selectPlaceholder: 'Select…',
   searchPlaceholder: 'Search…',
+  firstPage: 'First page',
+  previousPage: 'Previous page',
+  nextPage: 'Next page',
+  lastPage: 'Last page',
+  rowsPerPage: 'Rows per page',
+  showing: (from, to, total) => `Showing ${from}–${to} of ${total}`,
+  pageInfo: (page, total) => `Page ${page} of ${total}`,
 }
 
 const UiStringsContext = createContext<UiStrings>(defaultUiStrings)

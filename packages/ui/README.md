@@ -1,32 +1,38 @@
 # @tms/ui
 
-Shared, brand-agnostic component library for every TMS app (eu/us · dashboard/pwa).
+Component library for the **dashboards** (eu/us), built on shadcn + Tailwind. The
+PWAs use Ionic, not this library (see `docs/ARCHITECTURE.md`).
 
-## Layers
+## Structure
 
-| Folder        | For        | Assumes                          | Import rule                   |
-| ------------- | ---------- | -------------------------------- | ----------------------------- |
-| `primitives/` | both       | works on touch **and** desktop   | imports nothing form-specific |
-| `desktop/`    | dashboards | hover, keyboard, dense, ≥1024px  | may use `primitives/`         |
-| `mobile/`     | pwas       | touch, thumb-reach, small screen | may use `primitives/`         |
+Flat — one library, one import. No form-factor split.
 
-**`desktop/` and `mobile/` never import each other.** This is enforced by
-`eslint-plugin-boundaries` (see root `eslint.config.js`).
+```
+src/
+├── index.ts       # single barrel  →  import { Button, DataTable, cn } from '@tms/ui'
+├── lib/           # cn, UiStringsProvider / useUiStrings
+├── styles/        # base.css (tokens, @theme mapping, z-index/breakpoints, font)
+└── components/    # every component (one file each; a folder only if multi-file)
+```
 
-## Deciding where a component goes
-
-Put it in `primitives/` **only if** it renders and behaves correctly on both a
-touch phone and a desktop with no changes. Assumes hover/keyboard/dense → `desktop/`.
-Assumes touch/small-screen → `mobile/`. When in doubt, it is **not** a primitive.
+- **Import from `@tms/ui`** (single entry). `@tms/ui/styles/base.css` for the CSS.
+- One file per component; a component gets its own folder only if it truly spans
+  multiple files.
 
 ## Brand
 
-Components must never hardcode color or logo. Colors come from Tailwind 4 CSS
-variables provided by `@tms/theme-eu` / `@tms/theme-us`; the logo comes through a
-slot/prop. Same components, different skin per region.
+Components never hardcode color or logo. Colors come from Tailwind 4 CSS variables
+provided by `@tms/theme-eu` / `@tms/theme-us`; the logo comes through a slot/prop.
+Same components, different skin per region.
+
+## i18n
+
+`@tms/ui` never calls `t()`. Generic strings come from `UiStringsProvider`
+(English defaults); apps map `t()` → the provider once. Per-instance text
+(label/placeholder) is a normal prop.
 
 ## Showcase
 
-Every component is added to the showcase route in each of its states (default /
-loading / empty / error / disabled). That route — not Storybook — is how we
-review how components look, in both brands and light/dark.
+Every component is added to the showcase (`apps/showcase`, port 5588) in each of
+its states. That app — not Storybook — is how we review how components look, in
+both brands and light/dark.

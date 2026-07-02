@@ -19,6 +19,8 @@ import {
   CardHeader,
   CardTitle,
   Checkbox,
+  type ColumnDef,
+  DataTable,
   Dialog,
   DialogClose,
   DialogContent,
@@ -52,13 +54,23 @@ import {
   SheetTitle,
   SheetTrigger,
   Switch,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
   Textarea,
   Toaster,
   toast,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from '@tms/ui/primitives'
+} from '@tms/ui'
 
 type Brand = 'eu' | 'us'
 type ToastPosition =
@@ -77,6 +89,49 @@ const PARTNERS = [
   { value: 'p5', label: 'Hemofarm' },
   { value: 'p6', label: 'Tarkett' },
   { value: 'p7', label: 'Gorenje' },
+]
+
+type Vehicle = {
+  plate: string
+  model: string
+  capacity: number
+  status: string
+}
+
+const VEHICLES: Vehicle[] = [
+  { plate: 'BG-123-AB', model: 'Volvo FH', capacity: 24, status: 'Active' },
+  { plate: 'NS-456-CD', model: 'Scania R', capacity: 26, status: 'In service' },
+  { plate: 'NI-789-EF', model: 'MAN TGX', capacity: 22, status: 'Active' },
+  { plate: 'BG-321-GH', model: 'DAF XF', capacity: 25, status: 'Active' },
+  { plate: 'KG-654-IJ', model: 'Renault T', capacity: 20, status: 'Idle' },
+  { plate: 'SU-987-KL', model: 'Iveco S-Way', capacity: 23, status: 'Active' },
+  {
+    plate: 'ZR-147-MN',
+    model: 'Mercedes Actros',
+    capacity: 27,
+    status: 'In service',
+  },
+  { plate: 'PA-258-OP', model: 'Volvo FM', capacity: 21, status: 'Active' },
+]
+
+const vehicleColumns: ColumnDef<Vehicle>[] = [
+  { accessorKey: 'plate', header: 'Plate' },
+  { accessorKey: 'model', header: 'Model' },
+  { accessorKey: 'capacity', header: 'Capacity (t)' },
+  {
+    accessorKey: 'status',
+    header: 'Status',
+    enableSorting: false,
+    cell: ({ row }) => (
+      <Badge
+        variant={
+          row.original.status === 'In service' ? 'destructive' : 'secondary'
+        }
+      >
+        {row.original.status}
+      </Badge>
+    ),
+  },
 ]
 
 export function App() {
@@ -209,6 +264,56 @@ export function App() {
               </SheetContent>
             </Sheet>
           </div>
+        </Section>
+
+        <Section title="DataTable — sortable, bordered, paginated (desktop)">
+          <DataTable
+            columns={vehicleColumns}
+            data={VEHICLES}
+            pageSize={5}
+            onRowClick={(v) => toast(`${v.plate} — ${v.model}`)}
+          />
+        </Section>
+
+        <Section title="Tabs & Table">
+          <Tabs defaultValue="fleet" className="max-w-xl">
+            <TabsList>
+              <TabsTrigger value="fleet">Fleet</TabsTrigger>
+              <TabsTrigger value="drivers">Drivers</TabsTrigger>
+            </TabsList>
+            <TabsContent value="fleet">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Plate</TableHead>
+                    <TableHead>Model</TableHead>
+                    <TableHead>Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>BG-123-AB</TableCell>
+                    <TableCell>Volvo FH</TableCell>
+                    <TableCell>
+                      <Badge variant="secondary">Active</Badge>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>NS-456-CD</TableCell>
+                    <TableCell>Scania R</TableCell>
+                    <TableCell>
+                      <Badge variant="destructive">In service</Badge>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TabsContent>
+            <TabsContent value="drivers">
+              <p className="text-muted-foreground p-2 text-sm">
+                Drivers tab content…
+              </p>
+            </TabsContent>
+          </Tabs>
         </Section>
 
         <Section title="Toast (sonner)">

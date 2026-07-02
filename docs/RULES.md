@@ -49,15 +49,24 @@ change the rule in a commit — don't quietly break it.
   `cursor-pointer` and `disabled:cursor-not-allowed` (Tailwind v4 dropped the
   default button cursor). Never leave a clickable element on the default cursor.
 
-## 3. Component layering (`@tms/ui`)
+## 3. Component structure (`@tms/ui`)
 
-- **[lint]** Three layers: `primitives/` (agnostic), `desktop/` (dashboard),
-  `mobile/` (pwa). `desktop` and `mobile` never import each other; both may use
-  `primitives`; `primitives` import neither. Enforced by `eslint-plugin-boundaries`.
-- **[review]** A component is a **primitive only if** it works unchanged on touch
-  and desktop. In doubt → not a primitive.
-- **[review]** Every shared component is added to the showcase route in all its
-  states (default / loading / empty / error / disabled).
+- **[review]** `@tms/ui` is **one flat component library** for the dashboards —
+  no form-factor split (the PWA is Ionic, see ARCHITECTURE). All components live
+  in `src/components/` and are imported from a single entry: `@tms/ui`.
+- **[review]** One file per component (e.g. `button.tsx`); a component only gets
+  its own folder if it genuinely spans multiple files.
+- **[review]** `@tms/ui` holds only **generic, business-logic-free UI**
+  (`Button` … `DataTable`). "Composed" is fine as long as it stays generic —
+  `DataTable` is built from `Table` + `Select` + `Button` and belongs here.
+  **Feature/domain components** — anything with business logic, API wiring, or
+  domain validation (e.g. a `LoginForm`, `VehicleForm`) — do **not** belong here;
+  they live in the app: `apps/<app>/src/features/<feature>/components/`. The
+  dividing line is **business logic**, not "made of several components".
+- **[review]** Components consume theme tokens, never hardcoded colors; helpers
+  (`cn`, `UiStringsProvider`) live in `src/lib/`.
+- **[review]** Every component is added to the showcase in all its states
+  (default / loading / empty / error / disabled).
 
 ## 4. Shared vs per-region
 

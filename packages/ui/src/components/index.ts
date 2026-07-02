@@ -1,13 +1,11 @@
-// Primitives — brand- & form-factor-agnostic. Must render and behave correctly
-// on BOTH a touch phone and a desktop with no changes (e.g. Button, Input,
-// Badge, Dialog, Sheet). Never hardcode a brand color or logo — consume theme
-// tokens. When unsure whether something belongs here, it does NOT: a wrongly
-// shared component is worse than a duplicated one.
+// @tms/ui components — flat, one library for the dashboards (no form-factor
+// split; the PWA is Ionic). Import from `@tms/ui`.
 export * from './badge'
 export * from './button'
 export * from './card'
 export * from './checkbox'
 export * from './command'
+export * from './data-table'
 export * from './dialog'
 export * from './dropdown-menu'
 export * from './input'
@@ -21,6 +19,8 @@ export * from './separator'
 export * from './sheet'
 export * from './spinner'
 export * from './switch'
+export * from './table'
+export * from './tabs'
 export * from './textarea'
 export * from './toaster'
 export * from './tooltip'

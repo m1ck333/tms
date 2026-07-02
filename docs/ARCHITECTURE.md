@@ -19,14 +19,14 @@ moment each gets a customer. So: shared **packages**, consumed via pnpm workspac
 ```
 tms/
 ├── packages/
-│   ├── ui/           # shared components — primitives / desktop / mobile
-│   │   └── src/{primitives,desktop,mobile}/
+│   ├── ui/           # dashboard component library (shadcn) — flat src/components/
+│   │   └── src/{components,lib,styles}/
 │   ├── core/         # plumbing SHAPE: i18n, data layer, auth, routing, form+Zod
 │   ├── theme-eu/     # EU brand tokens + logo
 │   └── theme-us/     # US brand tokens + logo
 ├── apps/
-│   ├── eu-dashboard/  eu-pwa/     # consume @tms/* + @tms/theme-eu
-│   └── us-dashboard/  us-pwa/     # consume @tms/* + @tms/theme-us
+│   ├── eu-dashboard/  eu-pwa/     # dashboard: @tms/ui · pwa: Ionic + Capacitor
+│   └── us-dashboard/  us-pwa/     # both share @tms/core + theme + validation/i18n
 ├── docs/{RULES.md, ARCHITECTURE.md}
 ├── eslint.config.js  .prettierrc  tsconfig.base.json
 └── pnpm-workspace.yaml
@@ -72,3 +72,18 @@ nothing that _varies per company_ (the feature modules) is.
 - **App scaffolds** — apps are empty placeholders until Phase 2.5.
 - **Import-boundary lint** — configured now, but only exercises real cross-layer
   imports once components exist in Phase 2.
+
+## PWA stack (settled)
+
+- **PWA = Ionic React 8 + Capacitor, PWA-first.** Ionic and shadcn are different
+  UI systems that don't mix, so **`@tms/ui` (shadcn) is dashboards-only** — one
+  flat `components/` library, no form-factor split (mobile is Ionic's job in the
+  PWA app).
+- **Distribution path:** ship an installable PWA now (no store accounts, free),
+  then add native iOS/Android from the **same Capacitor codebase** later when
+  background GPS / store presence justifies the cost (Apple $99/yr, Google $25
+  once; Android can sideload account-free). Some features (reliable background
+  location) are native-build-only.
+- **Dashboard ↔ PWA share** `@tms/core` (logic/hooks/data layer), Zod validation,
+  i18n, types, and the raw brand palette (→ Tailwind vars for the dashboard, →
+  Ionic CSS vars for the PWA) — **not** UI components.

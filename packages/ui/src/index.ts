@@ -1,8 +1,5 @@
-// @tms/ui — shared component library.
-// Barrel re-exports each form-factor layer. In apps, prefer the deep entry
-// points (@tms/ui/primitives, @tms/ui/desktop, @tms/ui/mobile) so it stays
-// obvious which form factor a component belongs to.
+// @tms/ui — dashboard component library (shadcn + Tailwind). Single barrel:
+// `import { Button, DataTable, cn, UiStringsProvider } from '@tms/ui'`.
+// No form-factor layers — the PWA is Ionic, not this library (see ARCHITECTURE).
 export * from './lib'
-export * from './primitives'
-export * from './desktop'
-export * from './mobile'
+export * from './components'
